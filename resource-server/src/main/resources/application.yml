@@ -1,0 +1,26 @@
+server:
+  port: 8081
+  servlet:
+    session:
+      cookie:
+        name: RESOURCE_JSESSIONID
+spring:
+  application:
+    name: resource-server
+  datasource:
+    password: password
+    url: jdbc:postgresql://localhost:5432/shop
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+      show-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
