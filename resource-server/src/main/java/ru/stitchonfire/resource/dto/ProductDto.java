@@ -24,7 +24,7 @@ public class ProductDto {
     String characteristics;
     String characteristicsShort;
     String description;
-    Long price;
+    Double price;
     List<String> imagesIds;
     Instant creationTimestamp;
 

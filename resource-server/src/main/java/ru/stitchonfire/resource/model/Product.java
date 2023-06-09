@@ -49,7 +49,7 @@ public class Product {
     String description;
 
     @Column(nullable = false)
-    Long price;
+    Double price;
 
     @Column(nullable = false)
     Long n;

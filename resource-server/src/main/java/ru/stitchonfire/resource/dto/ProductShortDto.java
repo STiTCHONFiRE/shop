@@ -19,7 +19,7 @@ public class ProductShortDto {
     String productProducer;
     String tittle;
     String characteristicsShort;
-    Long price;
+    Double price;
     List<String> imagesIds;
     Instant creationTimestamp;
     public String getProductType() {
