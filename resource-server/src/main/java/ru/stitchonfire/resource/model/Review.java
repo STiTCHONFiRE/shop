@@ -35,17 +35,6 @@ public class Review {
     @Enumerated(EnumType.ORDINAL)
     ReviewRating reviewRating;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(
-            name = "product_id",
-            referencedColumnName = "id",
-            nullable = false,
-            foreignKey = @ForeignKey(
-                    name = "review_product_fk"
-            )
-    )
-    Product product;
-
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(
             name = "order_position_id",

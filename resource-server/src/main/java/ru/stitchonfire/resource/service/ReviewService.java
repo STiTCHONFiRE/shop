@@ -28,7 +28,7 @@ public class ReviewService {
 
     public ResponseEntity<ReviewsStatDto> getStatById(String id) {
         UUID uuid = UUID.fromString(id);
-        if (reviewRepository.existsByProduct_Id(uuid)) {
+        if (reviewRepository.existsByOrderPosition_Product_Id(uuid)) {
             return ResponseEntity.ok(ReviewsStatDto.builder()
                     .n(reviewRepository.countOfReviews(uuid))
                     .pc(new Long[]{
@@ -62,10 +62,9 @@ public class ReviewService {
             orderPosition.setReview(
                     Review.builder()
                             .reviewText(text)
-                            .username(username)
+                            .username(orderPosition.getOrder().getUsername())
                             .reviewRating(ReviewRating.values()[rating])
                             .dateOfPurchase(orderPosition.getOrder().getCreationTimestamp())
-                            .product(orderPosition.getProduct())
                             .orderPosition(orderPosition)
                             .build()
             );
