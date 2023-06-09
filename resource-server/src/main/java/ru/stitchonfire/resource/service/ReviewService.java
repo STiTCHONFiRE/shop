@@ -62,9 +62,7 @@ public class ReviewService {
             orderPosition.setReview(
                     Review.builder()
                             .reviewText(text)
-                            .username(orderPosition.getOrder().getUsername())
                             .reviewRating(ReviewRating.values()[rating])
-                            .dateOfPurchase(orderPosition.getOrder().getCreationTimestamp())
                             .orderPosition(orderPosition)
                             .build()
             );

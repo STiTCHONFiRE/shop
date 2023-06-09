@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import ru.stitchonfire.resource.dto.OrderDto;
 import ru.stitchonfire.resource.dto.OrderForAdminDto;
 import ru.stitchonfire.resource.dto.OrderPositionDto;
-import ru.stitchonfire.resource.dto.ReviewDto;
+import ru.stitchonfire.resource.mapper.OrderMapper;
 import ru.stitchonfire.resource.mapper.ProductMapper;
 import ru.stitchonfire.resource.mapper.ReviewMapper;
 import ru.stitchonfire.resource.model.Cart;
@@ -32,7 +32,7 @@ public class OrderService {
     OrderRepository orderRepository;
     UserDetailsRepository userDetailsRepository;
     ProductMapper productMapper;
-    ReviewMapper reviewMapper;
+    OrderMapper orderMapper;
 
     public ResponseEntity<HttpStatus> updateOrder(String id, OrderState orderState) {
         return orderRepository.findById(UUID.fromString(id)).map(order -> {
@@ -73,8 +73,8 @@ public class OrderService {
 
     public ResponseEntity<OrderDto> getOrderById(String orderId, String username) {
         return orderRepository.findByIdAndUsername(UUID.fromString(orderId), username)
-                .map(order -> ResponseEntity.ok(
-                        OrderDto.builder()
+                .map(order -> ResponseEntity.ok(orderMapper.map(order)
+                        /*OrderDto.builder()
                                 .orderState(order.getOrderState())
                                 .id(order.getId())
                                 .instant(order.getCreationTimestamp())
@@ -90,7 +90,7 @@ public class OrderService {
                                                 )
                                                 .toList()
                                 )
-                                .build()
+                                .build()*/
                 ))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -98,8 +98,8 @@ public class OrderService {
     @Transactional
     public ResponseEntity<List<OrderDto>> getActiveOrders(String username) {
         return ResponseEntity.ok(orderRepository.findAllByUsernameAndOrderStateNotAndOrderStateNot(username, OrderState.DONE, OrderState.CANCELED)
-                .map(order ->
-                        OrderDto.builder()
+                .map(orderMapper::mapIgnoreReview
+                        /*OrderDto.builder()
                                 .orderState(order.getOrderState())
                                 .id(order.getId())
                                 .instant(order.getCreationTimestamp())
@@ -114,15 +114,15 @@ public class OrderService {
                                                 )
                                                 .toList()
                                 )
-                                .build()
+                                .build() */
                 )
                 .toList());
     }
 
     public ResponseEntity<List<OrderDto>> getHistoryOrders(String username, int page) {
         return ResponseEntity.ok(orderRepository.findHistory(username, OrderState.DONE, OrderState.CANCELED, PageRequest.of(page, 3)).get()
-                .map(order ->
-                        OrderDto.builder()
+                .map(orderMapper::mapIgnoreReview
+                        /*OrderDto.builder()
                                 .orderState(order.getOrderState())
                                 .id(order.getId())
                                 .instant(order.getCreationTimestamp())
@@ -137,7 +137,7 @@ public class OrderService {
                                                 )
                                                 .toList()
                                 )
-                                .build()
+                                .build() */
                 )
                 .toList());
     }
@@ -193,8 +193,8 @@ public class OrderService {
             userDetailsRepository.save(userDetails);
             userDetails.setCart(Cart.builder().userDetails(userDetails).build());
             userDetailsRepository.save(userDetails);
-            return ResponseEntity.ok(
-                    OrderDto.builder()
+            return ResponseEntity.ok(orderMapper.mapIgnoreReview(orderSaved)
+                    /*OrderDto.builder()
                             .orderState(orderSaved.getOrderState())
                             .id(orderSaved.getId())
                             .instant(order.getCreationTimestamp())
@@ -209,7 +209,7 @@ public class OrderService {
                                             )
                                             .toList()
                             )
-                            .build()
+                            .build()*/
             );
         }).orElse(ResponseEntity.badRequest().build());
     }

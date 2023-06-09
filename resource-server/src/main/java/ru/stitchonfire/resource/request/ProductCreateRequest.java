@@ -1,8 +1,5 @@
 package ru.stitchonfire.resource.request;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import org.springframework.web.multipart.MultipartFile;
 import ru.stitchonfire.resource.state.ProductState;
 import ru.stitchonfire.resource.state.ProductType;
@@ -18,7 +15,7 @@ public record ProductCreateRequest(
         String characteristicsShort,
         String characteristics,
         String description,
-        Long price,
+        Double price,
         Long n
 ) {
 }

@@ -22,14 +22,8 @@ public class Review {
     @GenericGenerator(name = "uuid5", strategy = "org.hibernate.id.UUIDGenerator")
     UUID id;
 
-    @Column(nullable = false, updatable = false)
-    String username;
-
     @Column(nullable = false)
     String reviewText;
-
-    @Column(nullable = false)
-    Instant dateOfPurchase;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
