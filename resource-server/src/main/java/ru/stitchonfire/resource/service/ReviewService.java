@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.stitchonfire.resource.dto.ReviewDto;
@@ -56,6 +55,10 @@ public class ReviewService {
 
     public ResponseEntity<ReviewDto> createReview(String username, String id, String orderId, String text, int rating) {
         return orderPositionRepository.findByOrder_IdAndProduct_IdAndOrder_Username(UUID.fromString(orderId), UUID.fromString(id), username).map(orderPosition -> {
+            if (orderPosition.getReview() != null) {
+                return ResponseEntity.badRequest().body((ReviewDto) null);
+            }
+
             orderPosition.setReview(
                     Review.builder()
                             .reviewText(text)

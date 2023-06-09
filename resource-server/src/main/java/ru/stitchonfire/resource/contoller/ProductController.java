@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.stitchonfire.resource.dto.ProductDto;
 import ru.stitchonfire.resource.dto.ProductShortDto;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class ProductController {
     ProductService productService;
 
+    @PreAuthorize("hasAuthority('admin')")
     @PostMapping(value = "create", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ProductDto> createProduct(@ModelAttribute ProductCreateRequest request) {
         return productService.createProduct(request.files(), request);
