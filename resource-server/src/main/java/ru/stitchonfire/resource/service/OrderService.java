@@ -73,72 +73,21 @@ public class OrderService {
 
     public ResponseEntity<OrderDto> getOrderById(String orderId, String username) {
         return orderRepository.findByIdAndUsername(UUID.fromString(orderId), username)
-                .map(order -> ResponseEntity.ok(orderMapper.map(order)
-                        /*OrderDto.builder()
-                                .orderState(order.getOrderState())
-                                .id(order.getId())
-                                .instant(order.getCreationTimestamp())
-                                .products(
-                                        order.getOrderPositions()
-                                                .stream()
-                                                .map(orderPosition -> OrderPositionDto.builder()
-                                                        .serialCode(orderPosition.getSerialCode())
-                                                        .product(productMapper.shortMap(orderPosition.getProduct()))
-                                                        .review(reviewMapper.map(orderPosition.getReview()))
-                                                        .n(orderPosition.getN())
-                                                        .build()
-                                                )
-                                                .toList()
-                                )
-                                .build()*/
-                ))
+                .map(order -> ResponseEntity.ok(orderMapper.map(order)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @Transactional
     public ResponseEntity<List<OrderDto>> getActiveOrders(String username) {
         return ResponseEntity.ok(orderRepository.findAllByUsernameAndOrderStateNotAndOrderStateNot(username, OrderState.DONE, OrderState.CANCELED)
-                .map(orderMapper::mapIgnoreReview
-                        /*OrderDto.builder()
-                                .orderState(order.getOrderState())
-                                .id(order.getId())
-                                .instant(order.getCreationTimestamp())
-                                .products(
-                                        order.getOrderPositions()
-                                                .stream()
-                                                .map(orderPosition -> OrderPositionDto.builder()
-                                                        .serialCode(orderPosition.getSerialCode())
-                                                        .product(productMapper.shortMap(orderPosition.getProduct()))
-                                                        .n(orderPosition.getN())
-                                                        .build()
-                                                )
-                                                .toList()
-                                )
-                                .build() */
-                )
+                .map(orderMapper::mapIgnoreReview)
                 .toList());
     }
 
+    @Transactional
     public ResponseEntity<List<OrderDto>> getHistoryOrders(String username, int page) {
         return ResponseEntity.ok(orderRepository.findHistory(username, OrderState.DONE, OrderState.CANCELED, PageRequest.of(page, 3)).get()
-                .map(orderMapper::mapIgnoreReview
-                        /*OrderDto.builder()
-                                .orderState(order.getOrderState())
-                                .id(order.getId())
-                                .instant(order.getCreationTimestamp())
-                                .products(
-                                        order.getOrderPositions()
-                                                .stream()
-                                                .map(orderPosition -> OrderPositionDto.builder()
-                                                        .serialCode(orderPosition.getSerialCode())
-                                                        .product(productMapper.shortMap(orderPosition.getProduct()))
-                                                        .n(orderPosition.getN())
-                                                        .build()
-                                                )
-                                                .toList()
-                                )
-                                .build() */
-                )
+                .map(orderMapper::mapIgnoreReview)
                 .toList());
     }
 
@@ -193,24 +142,7 @@ public class OrderService {
             userDetailsRepository.save(userDetails);
             userDetails.setCart(Cart.builder().userDetails(userDetails).build());
             userDetailsRepository.save(userDetails);
-            return ResponseEntity.ok(orderMapper.mapIgnoreReview(orderSaved)
-                    /*OrderDto.builder()
-                            .orderState(orderSaved.getOrderState())
-                            .id(orderSaved.getId())
-                            .instant(order.getCreationTimestamp())
-                            .products(
-                                    orderSaved.getOrderPositions()
-                                            .stream()
-                                            .map(orderPosition -> OrderPositionDto.builder()
-                                                    .serialCode(orderPosition.getSerialCode())
-                                                    .product(productMapper.shortMap(orderPosition.getProduct()))
-                                                    .n(orderPosition.getN())
-                                                    .build()
-                                            )
-                                            .toList()
-                            )
-                            .build()*/
-            );
+            return ResponseEntity.ok(orderMapper.mapIgnoreReview(orderSaved));
         }).orElse(ResponseEntity.badRequest().build());
     }
 }
